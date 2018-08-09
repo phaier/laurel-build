@@ -13,8 +13,8 @@ ta==0.1.5
 sqlite3worker==1.1.7
 mock==2.0.0
 boto3==1.7.40
-botocore==1.10.65
-awscli==1.15.59
+awscli==1.15.74
+botocore==1.10.73
 python-dateutil==2.6.0
 multiprocessing-logging==0.2.5
 deribit-api
