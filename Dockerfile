@@ -19,5 +19,5 @@ RUN apt-get install -y pandoc sqlite3
 
 # Entrypoint
 COPY docker-entrypoint.sh /home/docker-entrypoint.sh
-RUN chmod +x docker-entrypoint.sh
-ENTRYPOINT ["docker-entrypoint.sh"]
+RUN chmod +x /home/docker-entrypoint.sh
+ENTRYPOINT ["/home/docker-entrypoint.sh"]
