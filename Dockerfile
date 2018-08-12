@@ -18,4 +18,6 @@ RUN pip3 install -r /home/requirements.txt
 RUN apt-get install -y pandoc sqlite3
 
 # Entrypoint
+COPY docker-entrypoint.sh /home/docker-entrypoint.sh
+RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
