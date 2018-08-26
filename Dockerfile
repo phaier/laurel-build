@@ -1,8 +1,6 @@
-FROM python:3.7.0-stretch AS build-env
 FROM jimako1989/bazel-build:latest
 MAINTAINER Tadashi KOJIMA
 
-COPY --from=build-env /usr/local/bin/ /usr/local/bin/
 WORKDIR /home
 
 # Check versions
