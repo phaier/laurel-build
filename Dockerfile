@@ -6,7 +6,8 @@ WORKDIR /home
 
 # Check versions
 RUN python3 --version \
-    && pip3 --version
+    && pip3 --version \
+    && bazel version
 
 # Install basic commands
 RUN apt-get update
