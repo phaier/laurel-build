@@ -9,7 +9,8 @@ RUN python3 --version \
     && pip3 --version
 
 # Install basic commands
-RUN apt-get install -y make vim less
+RUN apt-get update
+RUN apt-get install -y build-essential
 RUN apt-get install -y libatlas-doc libopenblas-base
 # skip install libatlas-base-dev libopenblas-dev
 
