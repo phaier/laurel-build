@@ -1,7 +1,12 @@
 FROM jimako1989/bazel-build:latest
+FROM python:3.7.0-stretch
 MAINTAINER Tadashi KOJIMA
 
 WORKDIR /home
+
+# Check versions
+RUN python3 --version \
+    && pip3 --version
 
 # Install basic commands
 RUN apt-get install -y make vim less
