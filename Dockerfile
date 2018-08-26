@@ -6,7 +6,7 @@ WORKDIR /home
 # Install basic commands
 RUN apt-get update
 RUN apt-get install -y build-essential
-RUN apt-get install -y libatlas-doc libopenblas-base libffi-dev libssl-dev
+RUN apt-get install -y libatlas-doc libopenblas-base libffi-dev libssl-dev libsqlite3-dev
 # skip install libatlas-base-dev libopenblas-dev
 
 # Install python
@@ -83,7 +83,7 @@ COPY requirements.txt /home/requirements.txt
 RUN pip3 install -r /home/requirements.txt
 
 # Install other modules
-RUN apt-get install -y pandoc sqlite3
+RUN apt-get install -y pandoc
 
 # Entrypoint
 COPY docker-entrypoint.sh /home/docker-entrypoint.sh
