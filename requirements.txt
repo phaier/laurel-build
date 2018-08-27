@@ -1,7 +1,7 @@
 numpy==1.14.3
 scipy==1.1.0
 setuptools>=38.5.1
-ccxt==1.13.76
+ccxt==1.17.194
 six==1.10.0
 pytz==2017.2
 munch==2.1.1
