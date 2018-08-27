@@ -6,7 +6,7 @@ WORKDIR /home
 # Install basic commands
 RUN apt-get update
 RUN apt-get install -y build-essential
-RUN apt-get install -y libatlas-doc libopenblas-base libffi-dev libssl-dev sqlite3 pandoc libsqlite3
+RUN apt-get install -y libatlas-doc libopenblas-base libffi-dev libssl-dev sqlite3 pandoc libsqlite3-dev
 # skip install libatlas-base-dev libopenblas-dev
 
 # Install python
