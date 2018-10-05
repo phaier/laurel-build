@@ -26,6 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 ENV PYTHON_VERSION 3.7.0
 
+# https://github.com/moby/moby/issues/13555#issuecomment-164396486
+RUN curl https://apt.dockerproject.org/gpg > docker.gpg.key && echo "c836dc13577c6f7c133ad1db1a2ee5f41ad742d11e4ac860d8e658b2b39e6ac1 docker.gpg.key" | sha256sum -c && apt-key add docker.gpg.key && rm docker.gpg.key
 RUN set -ex \
 	\
 	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
