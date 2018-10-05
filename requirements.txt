@@ -19,3 +19,4 @@ python-dateutil==2.6.0
 multiprocessing-logging==0.2.5
 deribit-api
 jupyter
+Oslash==0.5.1
