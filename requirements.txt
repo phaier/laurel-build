@@ -20,3 +20,4 @@ multiprocessing-logging==0.2.5
 deribit-api
 jupyter
 Oslash==0.5.1
+websocket-client==0.53.0
