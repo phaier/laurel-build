@@ -87,6 +87,9 @@ COPY requirements.txt /home/requirements.txt
 RUN pip install -r /home/requirements.txt
 
 
+### Override python command
+RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
+
 ### Entrypoint
 COPY docker-entrypoint.sh /home/docker-entrypoint.sh
 RUN chmod +x /home/docker-entrypoint.sh
