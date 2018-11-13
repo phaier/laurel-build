@@ -1,90 +1,96 @@
-FROM jimako1989/bazel-build:latest
+FROM pypy:3
 MAINTAINER Tadashi KOJIMA
 
 WORKDIR /home
 
-# Install basic commands
-RUN apt-get update
-RUN apt-get install -y build-essential
-RUN apt-get install -y libatlas-doc libopenblas-base libffi-dev libssl-dev sqlite3 pandoc libsqlite3-dev
-# skip install libatlas-base-dev libopenblas-dev
+### Install OpenJDK
 
-# Install python
-# ensure local python is preferred over distribution python
-ENV PATH /usr/local/bin:$PATH
-
-# http://bugs.python.org/issue19846
-# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG C.UTF-8
-
-# extra dependencies (over what buildpack-deps already includes)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		tk-dev \
-		uuid-dev \
+		bzip2 \
+		unzip \
+		xz-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
-ENV PYTHON_VERSION 3.7.0
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
 
-# https://github.com/moby/moby/issues/13555#issuecomment-164396486
-RUN curl https://apt.dockerproject.org/gpg > docker.gpg.key && echo "c836dc13577c6f7c133ad1db1a2ee5f41ad742d11e4ac860d8e658b2b39e6ac1 docker.gpg.key" | sha256sum -c && apt-key add docker.gpg.key && rm docker.gpg.key
-RUN set -ex \
-	\
-	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-	&& wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
-	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
-	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
-	&& rm -rf "$GNUPGHOME" python.tar.xz.asc \
-	&& mkdir -p /usr/src/python \
-	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
-	&& rm python.tar.xz \
-	\
-	&& cd /usr/src/python \
-	&& gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
-	&& ./configure \
-		--build="$gnuArch" \
-		--enable-loadable-sqlite-extensions \
-		--enable-shared \
-		--with-system-expat \
-		--with-system-ffi \
-		--without-ensurepip \
-	&& make -j "$(nproc)" \
-	&& make install \
-	&& ldconfig \
-	\
-	&& find /usr/local -depth \
-		\( \
-			\( -type d -a \( -name test -o -name tests \) \) \
-			-o \
-			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-		\) -exec rm -rf '{}' + \
-	&& rm -rf /usr/src/python \
-	\
-	&& python3 --version
+# add a simple script that can auto-detect the appropriate JAVA_HOME value
+# based on whether the JDK or only the JRE is installed
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
 
-# make some useful symlinks that are expected to exist
-RUN cd /usr/local/bin \
-	&& ln -s idle3 idle \
-	&& ln -s pydoc3 pydoc \
-	&& ln -s python3 python \
-	&& ln -s python3-config python-config
+# do some fancy footwork to create a JAVA_HOME that's cross-architecture-safe
+RUN ln -svT "/usr/lib/jvm/java-7-openjdk-$(dpkg --print-architecture)" /docker-java-home
+ENV JAVA_HOME /docker-java-home
 
-# pip install
-RUN curl -o get-pip.py https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py --trusted-host pypi.org --trusted-host files.pythonhosted.org
+ENV JAVA_VERSION 7u181
+ENV JAVA_DEBIAN_VERSION 7u181-2.6.14-1~deb8u1
 
-# Check versions
-RUN python3 --version \
-    && pip3 --version \
+RUN set -ex; \
+	\
+# deal with slim variants not having man page directories (which causes "update-alternatives" to fail)
+	if [ ! -d /usr/share/man/man1 ]; then \
+		mkdir -p /usr/share/man/man1; \
+	fi; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		openjdk-7-jdk="$JAVA_DEBIAN_VERSION" \
+	; \
+	rm -rf /var/lib/apt/lists/*; \
+	\
+# verify that "docker-java-home" returns what we expect
+	[ "$(readlink -f "$JAVA_HOME")" = "$(docker-java-home)" ]; \
+	\
+# update-alternatives so that future installs of other OpenJDK versions don't change /usr/bin/java
+	update-alternatives --get-selections | awk -v home="$(readlink -f "$JAVA_HOME")" 'index($3, home) == 1 { $2 = "manual"; print | "update-alternatives --set-selections" }'; \
+# ... and verify that it actually worked for one of the alternatives we care about
+	update-alternatives --query java | grep -q 'Status: manual'
+
+# If you're reading this and have any feedback on how this image could be
+# improved, please open an issue or a pull request so we can discuss it!
+#
+#   https://github.com/docker-library/openjdk/issues
+
+
+### Install bazel
+
+RUN wget https://github.com/bazelbuild/bazel/releases/download/0.18.1/bazel-0.18.1-installer-linux-x86_64.sh \
+    && chmod +x ./bazel-0.18.1-installer-linux-x86_64.sh \
+    && ./bazel-0.18.1-installer-linux-x86_64.sh
+
+
+### Check versions
+RUN pypy3 --version \
+    && pip --version \
     && bazel version
 
-# Install python modules
-COPY requirements.txt /home/requirements.txt
-RUN pip3 install -r /home/requirements.txt
 
-# Entrypoint
+### Install other libraries
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get install -y build-essential && \
+    apt-get install -y software-properties-common
+RUN apt-key adv --keyserver keys.gnupg.net --recv-keys C0B21F32
+RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu bionic main universe restricted multiverse"
+RUN apt-get update
+RUN apt-get remove -y binutils
+RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc python-sphinx gfortran libblas-dev liblapack-dev python-scipy python-numpy
+
+### Install python modules
+COPY requirements.txt /home/requirements.txt
+RUN pip install -r /home/requirements.txt
+
+
+### Override python command
+RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
+
+### Entrypoint
 COPY docker-entrypoint.sh /home/docker-entrypoint.sh
 RUN chmod +x /home/docker-entrypoint.sh
 ENTRYPOINT ["/home/docker-entrypoint.sh"]
