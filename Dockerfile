@@ -85,6 +85,9 @@ RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc python-sphin
 ### Override python command
 RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
 
+### Preprocessing for pip install
+RUN rm /usr/bin/lsb_release
+
 ### Entrypoint
 COPY docker-entrypoint.sh /home/docker-entrypoint.sh
 RUN chmod +x /home/docker-entrypoint.sh
