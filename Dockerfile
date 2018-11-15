@@ -82,11 +82,6 @@ RUN apt-get update
 RUN apt-get remove -y binutils
 RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc python-sphinx gfortran libblas-dev liblapack-dev python-scipy python-numpy
 
-### Install python modules
-COPY requirements.txt /home/requirements.txt
-RUN pip install -r /home/requirements.txt
-
-
 ### Override python command
 RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
 
