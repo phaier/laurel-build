@@ -91,4 +91,4 @@ RUN rm /usr/bin/lsb_release
 ### Entrypoint
 COPY docker-entrypoint.sh /home/docker-entrypoint.sh
 RUN chmod +x /home/docker-entrypoint.sh
-ENTRYPOINT ["/home/docker-entrypoint.sh"]
+CMD ["/home/docker-entrypoint.sh"]
