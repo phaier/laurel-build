@@ -76,7 +76,7 @@ RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y build-essential && \
     apt-get install -y software-properties-common
-RUN apt-key adv --keyserver keys.gnupg.net --recv-keys C0B21F32
+RUN apt-key adv --keyserver hkp://keys.gnupg.net:80 --recv-keys C0B21F32
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu bionic main universe restricted multiverse"
 RUN apt-get update
 RUN apt-get remove -y binutils
