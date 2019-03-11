@@ -29,7 +29,7 @@ RUN ln -svT "/usr/lib/jvm/java-7-openjdk-$(dpkg --print-architecture)" /docker-j
 ENV JAVA_HOME /docker-java-home
 
 ENV JAVA_VERSION 7u181
-ENV JAVA_DEBIAN_VERSION 7u181-2.6.14-1~deb8u1
+ENV JAVA_DEBIAN_VERSION 7u181-2.6.14-2~deb8u1
 
 RUN set -ex; \
 	\
@@ -60,9 +60,9 @@ RUN set -ex; \
 
 ### Install bazel
 
-RUN wget https://github.com/bazelbuild/bazel/releases/download/0.18.1/bazel-0.18.1-installer-linux-x86_64.sh \
-    && chmod +x ./bazel-0.18.1-installer-linux-x86_64.sh \
-    && ./bazel-0.18.1-installer-linux-x86_64.sh
+RUN wget https://github.com/bazelbuild/bazel/releases/download/0.23.1/bazel-0.23.1-installer-linux-x86_64.sh \
+    && chmod +x ./bazel-0.23.1-installer-linux-x86_64.sh \
+    && ./bazel-0.23.1-installer-linux-x86_64.sh
 
 
 ### Check versions
