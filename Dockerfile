@@ -28,4 +28,5 @@ RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
 RUN rm /usr/bin/lsb_release
 
 ### pip install
+COPY requirements.txt /home
 RUN pip install -r requirements.txt
