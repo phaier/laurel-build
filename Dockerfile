@@ -19,7 +19,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C0B21F32
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu bionic main universe restricted multiverse"
 RUN apt-get update
 RUN apt-get remove -y binutils
-RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc gfortran libblas-dev liblapack-dev sudo
+RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc gfortran libblas-dev liblapack-dev sudo libblas3 liblapack3 libc6
 
 ### Override python command
 RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
