@@ -33,7 +33,7 @@ RUN echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" >> /et
     echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" >> /etc/apt/sources.list.d/llvm.list && \
     wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
     apt-get update && \
-    apt-get install llvm-3.9 && \
+    apt-get install -y llvm-3.9 && \
     export LLVM_CONFIG=$(which llvm-config-3.9)
 
 ### pip install
