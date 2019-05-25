@@ -28,8 +28,8 @@ RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
 RUN rm /usr/bin/lsb_release
 
 ### Install llvm-config for numba
-RUN "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" >> /etc/apt/sources.list && \
-    "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" >> /etc/apt/sources.list.d/llvm.list && \
+RUN echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" >> /etc/apt/sources.list && \
+    echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" >> /etc/apt/sources.list.d/llvm.list && \
     wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
     apt-get update && \
     apt-get install llvm-3.9 && \
