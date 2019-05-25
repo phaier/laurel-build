@@ -19,13 +19,14 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C0B21F32
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu bionic main universe restricted multiverse"
 RUN apt-get update
 RUN apt-get remove -y binutils
-RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc python-sphinx gfortran libblas-dev liblapack-dev python-scipy python-numpy
+RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc gfortran libblas-dev liblapack-dev sudo
 
 ### Override python command
 RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
 
 ### Preprocessing for pip install
 RUN rm /usr/bin/lsb_release
+RUN apt-get install -y python-sphinx python-scipy python-numpy
 
 ### Install llvm-config for numba
 RUN echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" >> /etc/apt/sources.list && \
