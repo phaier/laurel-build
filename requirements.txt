@@ -27,7 +27,6 @@ trio==0.11.0
 pympler==0.6
 # gpy==1.9.6  # to install gpy, need to install numpy before. so multistage build should be required.
 docker-compose==1.24.0
-numba==0.43.1
 dateutils==0.6.6
 bitmex-websocket==0.2.55
 pytest==4.5.0
