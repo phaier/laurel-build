@@ -28,10 +28,10 @@ RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
 RUN rm /usr/bin/lsb_release
 RUN apt-get install -y python3-pip python-sphinx python-scipy python-numpy
 
-### install ccxt and pip install
+### pip install and install ccxt
+COPY requirements.txt /home
+RUN pip3 install -r requirements.txt
 RUN cd /home && \
     git clone https://github.com/ccxt/ccxt.git && \
     cd ccxt/python && \
     python setup.py install
-COPY requirements.txt /home
-RUN pip3 install -r requirements.txt
