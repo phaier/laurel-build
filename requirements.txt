@@ -29,7 +29,8 @@ pympler==0.6
 # gpy==1.9.6  # to install gpy, need to install numpy before. so multistage build should be required.
 docker-compose==1.24.0
 dateutils==0.6.6
-bitmex-websocket==0.2.55
 pytest==4.5.0
 selenium==3.141.0
 pykka==2.0.0
+pysher==1.0.4
+git+https://github.com/gokoro/pyliquidtap
