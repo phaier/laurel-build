@@ -1,4 +1,4 @@
-FROM pypy:3
+FROM pypy:3.6-7.1.1
 MAINTAINER Tadashi KOJIMA
 
 WORKDIR /home
@@ -21,12 +21,12 @@ RUN apt-get update
 RUN apt-get remove -y binutils
 RUN apt-get install -y libatlas-doc libopenblas-base sqlite3 pandoc gfortran libblas-dev liblapack-dev sudo
 
-### Override python command
-RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
-
-### Preprocessing for pip install
+### Additional install for pip
 RUN rm /usr/bin/lsb_release
 RUN apt-get install -y python3-pip python-sphinx python-scipy python-numpy
+
+### Override python command
+RUN ln -sf /usr/local/bin/pypy3 /usr/bin/python
 
 ### pip install and install ccxt
 COPY requirements.txt /home
