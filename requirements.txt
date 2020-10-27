@@ -4,7 +4,7 @@ cython==0.29.2
 numpy==1.16.4
 # scipy==1.2.2  # In OptionPricer, use scipy
 pandas==0.23.4
-cryptography==2.7
+cryptography==3.2
 influxdb==5.2.2
 six==1.11.0
 pytz==2017.2
