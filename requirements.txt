@@ -1,7 +1,7 @@
 git+https://git@github.com/alunir/xross_common.git#egg=xross_common
 setuptools>=38.5.1
 cython==0.29.2
-numpy==1.16.4
+numpy==1.22.0
 # scipy==1.2.2  # In OptionPricer, use scipy
 pandas==0.23.4
 cryptography==2.7
